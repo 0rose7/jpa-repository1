@@ -3,6 +3,7 @@ package com.baeldung.jparepository;
 import com.baeldung.jparepository.model.Book;
 import com.baeldung.jparepository.service.BookService;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,16 +16,24 @@ class JpaRepositoryApplicationTests {
     @Autowired
     private BookService bookService;
 
-    @Test
+    @BeforeEach
     void insertBooksIntoDatabase() {
-        bookService.insertBook(new Book(1L, "Altoriu sesely"));
-        bookService.insertBook(new Book(2L, "Dievu miskas"));
-        bookService.insertBook(new Book(3L, "Simtas metu vienatves"));
+        bookService.insertBook(new Book("Altorių šėšėly"));
+        bookService.insertBook(new Book("Dievų miškas"));
+        bookService.insertBook(new Book("Simtas metu vienatves"));
     }
 
-    void whenApplicationStarts_thenHibernateCreatesInitialRecords() {
+    @Test
+    void verifyBooksInDB() {
         List<Book> books = bookService.list();
+        printBooks(books);
+        Assertions.assertEquals(books.size(), 6);
+    }
 
-        Assertions.assertEquals(books.size(), 3);
+    void printBooks(List<Book> list) {
+        System.out.println("Knygu sarasas:");
+        for (Book book : list) {
+            System.out.println(book);
+        }
     }
 }
